@@ -1,36 +1,63 @@
 class Integer
-  def prime_divisors
-    2.upto(abs).select { |n| remainder(n).zero? and n.prime? }
-  end
-
-  def prime?
-    2.upto(pred).all? { |n| remainder(n).nonzero? }
-  end
+        def prime_divisors
+                res = []
+                number = self.abs
+                upper_limit = ( number / 2 ).ceil
+                2.upto( upper_limit ) do |divisor|
+                        if number % divisor == 0
+                                skip = 0
+                                res.each do |old_divisor|
+                                        if divisor % old_divisor == 0
+                                                skip = 1
+                                                break;
+                                        end
+                                end
+                                if skip != 1
+                                        res.push divisor
+                                end
+                        end
+                end
+                if res == []
+                        res = [number]
+                end
+                res
+        end
 end
 
 class Range
-  def fizzbuzz
-    map do |n|
-      if    n % 15 == 0 then :fizzbuzz
-      elsif n % 3  == 0 then :fizz
-      elsif n % 5  == 0 then :buzz
-      else n
-      end
-    end
-  end
+        def fizzbuzz
+                self.collect do |n|
+                        if n % 3 == 0 and n % 5 == 0
+                                :fizzbuzz
+                        elsif n % 5 == 0
+                                :buzz
+                        elsif n % 3 == 0
+                                :fizz
+                        else
+                                n
+                        end
+                end
+        end
 end
 
 class Hash
-  def group_values
-    each_with_object({}) do |(key, value), result|
-      result[value] ||= []
-      result[value] << key
-    end
-  end
+        def group_values
+                res = {}
+                self.each do |key, val|
+                        if res.has_key?(val)
+                                res[val].push key
+                        else
+                                res[val] = [key]
+                        end
+                end
+                res
+        end
 end
 
 class Array
-  def densities
-    map { |item| count item }
-  end
+        def densities
+                self.collect do |item|
+                        self.select { |item2| item2 == item }.size
+                end
+        end
 end
